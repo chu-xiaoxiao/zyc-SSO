@@ -82,7 +82,10 @@
     <bean id="AddUserController" class="com.zyc.controller.AddUserController" />
     <!--发送邮箱验证码-->
     <bean id="EmailVerifyCodeController" class="com.zyc.controller.EmailVerifyCodeController" />
-
+  <!--确认修改密码用户信息-->
+  <bean id="ModifyPassword" class="com.zyc.controller.ModifyPassword"/>
+  <!--修改用户密码-->
+  <bean id="ModifyPasswordAction" class="com.zyc.controller.ModifyPasswordAction"/>
   <bean
       id="handlerMappingC"
       class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
@@ -104,6 +107,8 @@
           <prop key="/user/findByName.do">FindByNameController</prop>
           <prop key="/user/getVerifyCodeFromMail.do">EmailVerifyCodeController</prop>
           <prop key="/user/adduser.do">AddUserController</prop>
+        <prop key="/user/modifyPassword">ModifyPassword</prop>
+        <prop key="/user/modifyPasswordAction">ModifyPasswordAction</prop>
       </util:properties>
     </property>
     <!--

@@ -31,13 +31,15 @@ public class MyPassword extends AbstractUsernamePasswordAuthenticationHandler  {
         String username = transformedCredential.getUsername();
         String password = EncodeMD5.encodeMD5(transformedCredential.getPassword());
         //认证用户名和密码是否正确
-        if(this.verifyAccount(username, password)){
+        if(this.verifyAccountByUsername(username, password)){
+            return createHandlerResult(transformedCredential, new SimplePrincipal(username), null);
+        }else if(this.verifyAccountByEmail(username,password)){
             return createHandlerResult(transformedCredential, new SimplePrincipal(username), null);
         }
         throw new FailedLoginException();
     }
 
-    public boolean verifyAccount(String username, String plainPassword){
+    public boolean verifyAccountByUsername(String username, String plainPassword){
         UserExample userExample = new UserExample();
         userExample.getOredCriteria().add(userExample.createCriteria().andUsernameEqualTo(username).andUserpasswordEqualTo(plainPassword));
         List<User> result = userMapper.selectByExample(userExample);
@@ -47,5 +49,14 @@ public class MyPassword extends AbstractUsernamePasswordAuthenticationHandler  {
             return false;
         }
     }
-
+    public boolean verifyAccountByEmail(String email,String plainPassword){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsermailEqualTo(email).andUserpasswordEqualTo(plainPassword);
+        List<User> result = userMapper.selectByExample(userExample);
+        if(result.size()>=0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

@@ -242,7 +242,7 @@
                             <label for="firstname" class="col-sm-2 control-label">用户名</label>
                             <div class="col-lg-8">
                                 <input type="text" name="username" class="form-control" value="${sessionScope.openIdLocalId}"
-                                       placeholder="请输入用户名"/>
+                                       placeholder="用户名/邮箱"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -251,6 +251,8 @@
                                 <input type="password" name="password" class="form-control"
                                        placeholder="请输入密码"/>
                             </div>
+                            <a href="/modifyPassword.jsp?service=${requestScope.service}">忘记密码？</a>
+                            <%session.setAttribute("service",request.getParameter("service"));   %>
                         </div>
                         <div class="form-group">
                             <label for="password" class="col-sm-2 control-label">验证码</label>
@@ -325,18 +327,9 @@
                         <div class="col-lg-4">
                             <input type="email" name="useremail" class="form-control"
                                    placeholder="输入邮箱" id="useremail"/>
-                            <div id="emailmsg"></div>
+                            <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
                         </div>
-                    </div>
-                    <div class="form-group" id="veudyCode">
-                        <label for="username" class="col-sm-2 control-label">验证码</label>
-                        <div class="col-lg-4">
-                            <input type="password" name="veudyCode_email" class="form-control"
-                                   placeholder="输入验证码" id="veudyCode_email"/>
-                            <span id="veudyCodeMsg">
-                                <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
-                            </span>
-                        </div>
+                        <span id="emailMsg"></span>
                     </div>
                 </form>
             </div>

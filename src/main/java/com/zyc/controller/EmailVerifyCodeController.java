@@ -1,6 +1,9 @@
 package com.zyc.controller;
 
+import com.zyc.service.UserService;
 import com.zyc.util.MailUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,11 +21,19 @@ import java.io.UnsupportedEncodingException;
  */
 @Controller("emailVerifyCodeController")
 public class EmailVerifyCodeController extends AbstractController {
+    @Autowired
+    @Qualifier("userServiceImplement")
+    UserService userService;
+
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         MailUtil mailUtil = new MailUtil(UserController.class.getClassLoader().getResource("mail.yml"));
         PrintWriter out = response.getWriter();
         String veudyCode = null;
+        if(userService.findUserByEmail(request.getParameter("useremail")).size()==0){
+            out.print("验证码获取失败");
+            return null;
+        }
         try {
             veudyCode = mailUtil.sendVerifyCode(10, request.getParameter("useremail"));
         } catch (UnsupportedEncodingException e) {

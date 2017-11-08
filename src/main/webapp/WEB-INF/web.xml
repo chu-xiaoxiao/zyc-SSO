@@ -242,5 +242,15 @@
     <url-pattern>/user/adduser.do</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>cas</servlet-name>
+    <url-pattern>/user/modifyPassword</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>cas</servlet-name>
+    <url-pattern>/user/modifyPasswordAction</url-pattern>
+  </servlet-mapping>
+
   <!--??? end-->
 </web-app>

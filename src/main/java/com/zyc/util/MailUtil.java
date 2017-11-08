@@ -95,7 +95,7 @@ public class MailUtil {
                 stringBuffer.append((char)(97-36+temp));
             }
         }
-        this.sendMail("博客注册验证码","获取的验证码为"+stringBuffer.toString(),receiveMail);
+        this.sendMail("用户信息变更验证码","获取的验证码为"+stringBuffer.toString(),receiveMail);
         return stringBuffer.toString();
     }
     /**
@@ -129,7 +129,7 @@ public class MailUtil {
         //创建一封邮件
         MimeMessage mimeMessage = new MimeMessage(session);
         //添加发送人
-        mimeMessage.setFrom(new InternetAddress(this.getMailAccount(),"SSM","UTF-8"));
+        mimeMessage.setFrom(new InternetAddress(this.getMailAccount(),"博客网站管理","UTF-8"));
         //添加收件人
         List<InternetAddress> internetAddresses = new ArrayList<InternetAddress>();
         for(String temp : receiveMail){
