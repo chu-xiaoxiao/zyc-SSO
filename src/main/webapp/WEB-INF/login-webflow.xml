@@ -68,7 +68,7 @@
 		<if test="flowScope.warnCookieValue" then="showWarningView" else="redirect" />
 	</decision-state>
 	
-	<!-- 
+	<!--
 	<action-state id="startAuthenticate">
 		<action bean="x509Check" />
 		<transition on="success" to="sendTicketGrantingTicket" />
@@ -128,6 +128,7 @@
     <transition on="InvalidLoginTimeException" to="casBadHoursView"/>
     <transition on="FailedLoginException" to="generateLoginTicket"/>
     <transition on="AccountNotFoundException" to="generateLoginTicket"/>
+      <transition on="MyLoginException" to="generateLoginTicket"/>
     <transition on="UNKNOWN" to="generateLoginTicket"/>
   </action-state>
 

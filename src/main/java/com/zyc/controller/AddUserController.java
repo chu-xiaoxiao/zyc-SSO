@@ -26,7 +26,7 @@ public class AddUserController extends AbstractController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         String verifyCode = request.getParameter("veudyCode_email");
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         if(!session.getAttribute("verifyCode").equals(verifyCode)){
             modelAndView.addObject("addError","验证码错误");
             modelAndView.setViewName("redirect:/user/logIn.jsp");
@@ -36,12 +36,11 @@ public class AddUserController extends AbstractController {
         user.setUsername(request.getParameter("username"));
         user.setUserpassword(EncodeMD5.encodeMD5(request.getParameter("password")));
         user.setUsermail(request.getParameter("useremail"));
-        user.setUsertype(1);
         userService.insertuUser(user);
 
+        session.setAttribute("handleUrl",request.getParameter("service"));
         session.setAttribute("user",user);
-        modelAndView.setViewName("redirect:/login");
+        modelAndView.setViewName("redirect:/login?service");
         return modelAndView;
     }
-
 }

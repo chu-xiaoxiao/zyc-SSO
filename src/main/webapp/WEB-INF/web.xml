@@ -180,7 +180,7 @@
 
   <servlet-mapping>
     <servlet-name>cas</servlet-name>
-    <url-pattern>/user/getVerifyCode.do</url-pattern>
+    <url-pattern>/user/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

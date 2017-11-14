@@ -22,4 +22,6 @@ public class MyUsernamePasswordCredential extends UsernamePasswordCredential {
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
     }
+
+
 }

@@ -6,6 +6,7 @@
 %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -226,7 +227,7 @@
 </head>
 
 <body>
-
+<c:set var="handle" value="${requestScope.service==null?sessionScope.handleUrl:requestScope.service}" />
 <div class="container">
     <div class="row">
         <div class="col-md-5 col-md-offset-4">
@@ -235,9 +236,8 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                    <form:form action="/login?service=${requestScope.service}" method="post"
-                          class="form-horizontal" role="form">
-                        <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false"/>
+                        <form:form action="${contextPath}/login?service=${handle}" method="post"
+                                   class="form-horizontal" role="form" commandName="${commandName}">
                         <div class="form-group">
                             <label for="firstname" class="col-sm-2 control-label">用户名</label>
                             <div class="col-lg-8">
@@ -246,20 +246,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-sm-2 control-label">密码</label>
+                            <label for="password" class="col-sm-2 control-label">密码</label>
                             <div class="col-lg-8">
                                 <input type="password" name="password" class="form-control"
                                        placeholder="请输入密码"/>
                             </div>
-                            <a href="/modifyPassword.jsp?service=${requestScope.service}">忘记密码？</a>
-                            <%session.setAttribute("service",request.getParameter("service"));   %>
+                            <a href="/modifyPassword.jsp?service=${handle}">忘记密码？</a>
                         </div>
                         <div class="form-group">
                             <label for="password" class="col-sm-2 control-label">验证码</label>
                             <div class="col-lg-8">
                                 <input type="text" name="verifyCode" class="form-control"
                                        placeholder="请输入验证码"/>
-                                <span style="color: red">${requestScope.msg}</span>
+                                <span style="color: red" style="color: #ff5500;">${requestScope.msg}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -273,6 +272,11 @@
                             <div class="col-sm-offset-2 col-sm-10">
                                 <input type="submit" class="btn btn-info" value="登陆"/>
                                 <button type="button" class="btn btn-primary" id="register">注册</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <span style="color: red" style="color: #ff5500;"><form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false"/></span>
                             </div>
                         </div>
                         <input type="hidden" name="lt" value="${loginTicket}" />
@@ -296,8 +300,8 @@
                 <h4 class="modal-title" id="myModalLabel">注册</h4>
             </div>
             <div class="modal-body" id="modaltext">
-                <form action="/user/adduser.do" class="form-horizontal" id="registerfrom"
-                      role="form">
+                <form action="/user/adduser.do?service=${handle}" class="form-horizontal" id="registerfrom"
+                      role="form" method="post">
                     <div class="form-group" id="vilidatezhanghao">
                         <label for="username" class="col-sm-2 control-label">用户名</label>
                         <div class="col-lg-4">
@@ -325,11 +329,20 @@
                     <div class="form-group" id="uenail">
                         <label for="useremail" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-lg-4">
-                            <input type="email" name="useremail" class="form-control"
+                            <input type="email" name="u seremail" class="form-control"
                                    placeholder="输入邮箱" id="useremail"/>
-                            <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
                         </div>
-                        <span id="emailMsg"></span>
+                    </div>
+                    <div class="form-group" id="veudyCode">
+                        <label for="username" class="col-sm-2 control-label">验证码</label>
+                        <div class="col-lg-4">
+                            <input type="password" name="veudyCode_email" class="form-control"
+                                   placeholder="输入验证码" id="veudyCode_email"/>
+                            <span id="veudyCodeMsg">
+                                <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
+                            </span>
+                            <span id="emailMsg"></span>
+                        </div>
                     </div>
                 </form>
             </div>

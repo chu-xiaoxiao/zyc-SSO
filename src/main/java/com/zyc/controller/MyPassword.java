@@ -1,5 +1,6 @@
 package com.zyc.controller;
 
+import com.zyc.exception.MyLoginException;
 import com.zyc.mapper.UserMapper;
 import com.zyc.model.User;
 import com.zyc.model.UserExample;
@@ -29,34 +30,40 @@ public class MyPassword extends AbstractUsernamePasswordAuthenticationHandler  {
 
         //UsernamePasswordCredential参数包含了前台页面输入的用户信息
         String username = transformedCredential.getUsername();
+
         String password = EncodeMD5.encodeMD5(transformedCredential.getPassword());
         //认证用户名和密码是否正确
-        if(this.verifyAccountByUsername(username, password)){
-            return createHandlerResult(transformedCredential, new SimplePrincipal(username), null);
-        }else if(this.verifyAccountByEmail(username,password)){
-            return createHandlerResult(transformedCredential, new SimplePrincipal(username), null);
+        User user = null;
+        if((user = this.verifyAccountByUsername(username, password))!=null){
+            transformedCredential.setUsername(user.getId().toString());
+            return createHandlerResult(transformedCredential, new SimplePrincipal(user.getId().toString()), null);
+        }else if((user=this.verifyAccountByEmail(username,password))!=null){
+            transformedCredential.setUsername(user.getId().toString());
+            return createHandlerResult(transformedCredential, new SimplePrincipal(user.getId().toString()), null);
         }
         throw new FailedLoginException();
     }
 
-    public boolean verifyAccountByUsername(String username, String plainPassword){
+    public User verifyAccountByUsername(String username, String plainPassword){
         UserExample userExample = new UserExample();
         userExample.getOredCriteria().add(userExample.createCriteria().andUsernameEqualTo(username).andUserpasswordEqualTo(plainPassword));
         List<User> result = userMapper.selectByExample(userExample);
         if(result.size()>0){
-            return true;
+            return result.get(0);
         }else{
-            return false;
+            return null;
         }
     }
-    public boolean verifyAccountByEmail(String email,String plainPassword){
+
+    public User verifyAccountByEmail(String email,String plainPassword){
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsermailEqualTo(email).andUserpasswordEqualTo(plainPassword);
         List<User> result = userMapper.selectByExample(userExample);
-        if(result.size()>=0){
-            return true;
+        if(result.size()>0){
+            return result.get(0);
         }else{
-            return false;
+            return null;
         }
     }
+
 }
