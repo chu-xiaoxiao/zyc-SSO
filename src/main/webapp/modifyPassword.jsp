@@ -44,8 +44,30 @@
 <link rel="stylesheet" href="/css/jquery-confirm.css">
     <head>
         <title>修改密码</title>
+        <style>
+            body {
+                background: url("bak.jpg") no-repeat;
+                background-size:cover;
+            }
+        </style>
         <script>
             function validateUserEmail() {
+                var flag = true;
+                var uemail = $("#useremail").val();
+                if(uemail.trim()==''){
+                    $("#useremailmsg").html("<span style='color:red'>邮箱不能为空</span>");
+                    $("#validateUserEmail").attr("class", "form-group has-error");
+                    $("#tijiao").attr("class", "btn btn-primary disabled");
+                    return false;
+                }
+                var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+                flag = reg.test(uemail);
+                if(flag==false){
+                    $("#useremailmsg").html("<span style='color:red'>邮箱格式不正确</span>");
+                    $("#validateUserEmail").attr("class", "form-group has-error");
+                    $("#tijiao").attr("class", "btn btn-primary disabled");
+                    return false;
+                }
                 $.ajax({
                     url: "/user/findByEmail",
                     data: {"useremail": $("#useremail").val()},
@@ -136,7 +158,23 @@
                     flag = validateUpwd();
                     flag = validateUpwdAgaid();
                     if (flag == true) {
-                        $("#modifyUserForm").submit();
+                        $.ajax({
+                            url: "/user/modifyPassword",
+                            type: "get",
+                            data: {
+                                "useremail": $("#useremail").val(),
+                                "verifCode": $("#verifCode").val(),
+                                "upwd": $("#upwd").val()
+                            },
+                            success: function (data) {
+                                $("#msg").html(data);
+                                if (data.indexOf("true") > 0) {
+                                    $("#msg").append("页面即将跳转至登陆页面")
+                                    setTimeout('hreftologin()', 3000);
+                                }
+                            }
+                        });
+                        return false;
                     } else {
                         return false;
                     }
@@ -170,27 +208,6 @@
             function hreftologin() {
                 window.location.href = "/login?service=" + GetQueryString('service');
             }
-            $(function () {
-                $("#sub").click(function () {
-                    $.ajax({
-                        url: "/user/modifyPassword",
-                        type: "get",
-                        data: {
-                            "useremail": $("#useremail").val(),
-                            "verifCode": $("#verifCode").val(),
-                            "upwd": $("#upwd").val()
-                        },
-                        success: function (data) {
-                            $("#msg").html(data);
-                            if (data.indexOf("true") > 0) {
-                                $("#msg").append("页面即将跳转至登陆页面")
-                                setTimeout('hreftologin()', 3000);
-                            }
-                        }
-                    });
-                    return false;
-                });
-            });
         </script>
     </head>
     <body>
@@ -215,16 +232,17 @@
                                 <div class="form-group" id="validateVerifCode">
                                     <label for="VerifCode" class="col-sm-2 control-label">验证码:</label>
                                     <div class="col-lg-8">
-                                        <input type="text" name="VerifCode" id="verifCode" class="form-control"
+                                        <input type="text" name="verifCode" id="verifCode" class="form-control"
                                                placeholder="请输入验证码">
                                     </div>
+                                    <div id="emailMsg"></div>
                                     <div id="verifCodeMsg"></div>
                                 </div>
                                 <div class="form-group" id="validateUpwd">
                                     <label for="upwd" class="col-sm-2 control-label">新密码:</label>
                                     <div class="col-lg-8">
                                         <input type="password" id="upwd" class="form-control"
-                                               placeholder="请输入新密码">
+                                               placeholder="请输入新密码" name="upwd">
                                     </div>
                                     <div id="upwdMsg"></div>
                                 </div>

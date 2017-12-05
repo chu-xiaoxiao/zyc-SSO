@@ -6,6 +6,8 @@ import com.zyc.util.EncodeMD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -16,17 +18,17 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by YuChen Zhang on 17/11/03.
  */
-@Controller()
+
 public class AddUserController extends AbstractController {
     @Autowired
     @Qualifier("userServiceImplement")
     UserService userService;
 
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response){
         ModelAndView modelAndView = new ModelAndView();
         String verifyCode = request.getParameter("veudyCode_email");
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         if(!session.getAttribute("verifyCode").equals(verifyCode)){
             modelAndView.addObject("addError","验证码错误");
             modelAndView.setViewName("redirect:/user/logIn.jsp");
@@ -34,10 +36,9 @@ public class AddUserController extends AbstractController {
         }
         User user = new User();
         user.setUsername(request.getParameter("username"));
-        user.setUserpassword(EncodeMD5.encodeMD5(request.getParameter("password")));
         user.setUsermail(request.getParameter("useremail"));
         userService.insertuUser(user);
-
+        userService.modifyPasswordWithNewUser(user,request.getParameter("password"));
         session.setAttribute("handleUrl",request.getParameter("service"));
         session.setAttribute("user",user);
         modelAndView.setViewName("redirect:/login?service");

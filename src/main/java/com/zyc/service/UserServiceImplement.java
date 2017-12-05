@@ -3,6 +3,7 @@ package com.zyc.service;
 import com.zyc.mapper.UserMapper;
 import com.zyc.model.User;
 import com.zyc.model.UserExample;
+import com.zyc.util.EncodeMD5;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +61,7 @@ public class UserServiceImplement implements UserService{
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class,propagation= Propagation.REQUIRED)
 	public void modifyUserInfo(User user) {
 		userMapper.updateByPrimaryKeySelective(user);
 	}
@@ -71,4 +73,10 @@ public class UserServiceImplement implements UserService{
 		return userMapper.selectByExample(userExample);
 	}
 
+    @Override
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
+    public void modifyPasswordWithNewUser(User user, String temp){
+		user.setUserpassword(EncodeMD5.encodeMD5(temp,user.getId().toString()));
+        userMapper.updateByPrimaryKeySelective(user);
+    }
 }

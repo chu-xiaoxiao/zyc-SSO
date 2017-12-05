@@ -49,6 +49,7 @@ public interface UserMapper {
         "#{username,jdbcType=VARCHAR}, #{usernickname,jdbcType=VARCHAR}, ",
         "#{userpassword,jdbcType=VARCHAR}, #{usertype,jdbcType=INTEGER})"
     })
+    @Options(useGeneratedKeys = true, keyProperty = "id",keyColumn="id")
     int insert(User record);
 
     /**

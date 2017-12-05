@@ -107,7 +107,7 @@
         MyBatis定义数据源,同意加载配置
     -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"></property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <!--
@@ -115,8 +115,8 @@
         basePackage:指定sql映射文件/接口所在的包（自动扫描）
     -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.zyc.mapper"></property>
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <property name="basePackage" value="com.zyc.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
     <!--
@@ -124,13 +124,14 @@
     -->
     <bean id="txManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"></property>
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
     <!-- 5. 使用声明式事务2
          transaction-manager：引用上面定义的事务管理器
      -->
     <tx:annotation-driven transaction-manager="txManager" />
+
     <!--
       Including this aspectj-autoproxy element will cause spring to automatically
       create proxies around any beans defined in this file that match the pointcuts

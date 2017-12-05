@@ -12,4 +12,5 @@ public interface UserService {
 	User findByName(String name);
 	void modifyUserInfo(User user);
 	List<User> findUserByEmail(String email);
+	public void modifyPasswordWithNewUser(User user,String temp);
 }

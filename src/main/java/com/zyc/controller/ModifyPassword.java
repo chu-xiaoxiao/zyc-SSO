@@ -49,7 +49,7 @@ public class ModifyPassword extends AbstractController{
 
         String pwd =  httpServletRequest.getParameter("upwd");
         User user = result.get(0);
-        user.setUserpassword(EncodeMD5.encodeMD5(pwd));
+        user.setUserpassword(EncodeMD5.encodeMD5(pwd,user.getId().toString()));
         userService.modifyUserInfo(user);
         out.print("修改成功<input type='hidden' value = 'true'/>");
         out.close();

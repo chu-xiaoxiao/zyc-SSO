@@ -48,152 +48,161 @@
           rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="/css/jquery-confirm.css">
+    <style>
+        body {
+            background: url("bak.jpg") no-repeat;
+            background-size:cover;
+        }
+    </style>
     <script src="/js/jquery-confirm.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            var username;
-            var pwd;
-            var pwdagan;
-            $("#username").blur(function () {
-                if ($("#username").val() == "") {
-                    $("#msg").html("<span style='color:red'>用户名不能为空</span>");
-                    $("#vilidatezhanghao").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                    return;
-                }
-                $.ajax({
-                    url: "/user/findByName.do",
-                    data: {
-                        username: $("#username").val()
-                    },
-                    error: function () {
-                        alert("error");
-                    },
-                    success: function (data) {
-                        if (data == "error") {
-                            $("#msg").html("<span style='color:red'>已存在</span>");
-                            $("#vilidatezhanghao").attr("class", "form-group has-error");
-                            $("#tijiao").attr("class", "btn btn-primary disabled");
-                        } else {
-                            $("#msg").html(null);
-                            $("#vilidatezhanghao").attr("class", "form-group has-success");
-                            $("#tijiao").attr("class", "btn btn-primary");
-                        }
+        function validateUserEmail() {
+            var flag = true;
+            var uemail = $("#useremail").val();
+            if(uemail.trim()==''){
+                $("#useremailmsg").html("<span style='color:red'>邮箱不能为空</span>");
+                $("#validateUserEmail").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            }
+            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+            flag = reg.test(uemail);
+            if(flag==false){
+                $("#useremailmsg").html("<span style='color:red'>邮箱格式不正确</span>");
+                $("#validateUserEmail").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            }
+            $.ajax({
+                url: "/user/findByEmail",
+                data: {"useremail":uemail},
+                success: function (data1) {
+                    if (data1 != "ok") {
+                        $("#useremailmsg").html("<span style='color:red'>邮箱已被注册</span>");
+                        $("#validateUserEmail").attr("class", "form-group has-error");
+                        $("#tijiao").attr("class", "btn btn-primary disabled");
+                        return false;
+                    } else {
+                        $("#useremailmsg").html(null);
+                        $("#validateUserEmail").attr("class", "form-group has-success");
+                        $("#tijiao").attr("class", "btn btn-primary");
+                        return true;
                     }
-                });
-            });
-            $("#password").blur(function () {
-                if ($("#password").val() == "") {
-                    $("#msg1").html("<span style='color:red'>密码不能为空</span>");
-                    $("#vilidatepwd").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                } else {
-                    $("#tijiao").attr("class", "btn btn-primary");
                 }
             });
-            $("#passwordagain").blur(function () {
-                if ($("#passwordagain").val() == "") {
-                    $("#msg2").html("<span style='color:red'>重复密码不能为空</span>");
-                    $("#vilidatepwd1").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                    return;
-                } else {
-                    $("#tijiao").attr("class", "btn btn-primary");
+        };
+        function validateUsername(){
+            var flag = true;
+            if ($("#username").val() == "") {
+                $("#msg").html("<span style='color:red'>用户名不能为空</span>");
+                $("#vilidatezhanghao").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                flag = false;
+            }
+            $.ajax({
+                url: "/user/findByName.do",
+                data: {
+                    username: $("#username").val()
+                },
+                error: function () {
+                    alert("error");
+                },
+                success: function (data) {
+                    if (data == "error") {
+                        $("#msg").html("<span style='color:red'>已存在</span>");
+                        $("#vilidatezhanghao").attr("class", "form-group has-error");
+                        $("#tijiao").attr("class", "btn btn-primary disabled");
+                        flag =  false;
+                    } else {
+                        $("#msg").html(null);
+                        $("#vilidatezhanghao").attr("class", "form-group has-success");
+                        $("#tijiao").attr("class", "btn btn-primary");
+                        flag = true;
+                    }
                 }
-                if ($("#passwordagain").val() != $("#password").val()) {
-                    $("#msg1").html("<span style='color:red'>两次密码不一致</span>");
-                    $("#msg2").html("<span style='color:red'>两次密码不一致</span>");
-                    $("div[id*=vilidatepwd]").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                } else {
-                    $("#msg1").html(null);
-                    $("#msg2").html(null);
-                    $("div[id*=vilidatepwd]").attr("class", "form-group has-success");
-                    $("#tijiao").attr("class", "btn btn-primary");
-                }
+            });
+            return flag;
+        };
+        function validatePassowrd(){
+            if ($("#password").val() == "") {
+                $("#msg1").html("<span style='color:red'>密码不能为空</span>");
+                $("#vilidatepwd").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            } else {
+                $("#msg1").html(null);
+                $("#vilidatepwd").attr("class", "form-group has-success");
+                $("#tijiao").attr("class", "btn btn-primary");
+            }
+            return true;
+        };
+        function validatePasswordAgain() {
+            if ($("#passwordagain").val() == "") {
+                $("#msg2").html("<span style='color:red'>重复密码不能为空</span>");
+                $("#vilidatepwd1").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            } else {
+                $("#tijiao").attr("class", "btn btn-primary");
+            }
+            if ($("#passwordagain").val() != $("#password").val()) {
+                $("#msg1").html("<span style='color:red'>两次密码不一致</span>");
+                $("#msg2").html("<span style='color:red'>两次密码不一致</span>");
+                $("div[id*=vilidatepwd]").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            } else {
+                $("#msg1").html(null);
+                $("#msg2").html(null);
+                $("div[id*=vilidatepwd]").attr("class", "form-group has-success");
+                $("#tijiao").attr("class", "btn btn-primary");
+            }
+            return true;
+        };
+        function validateveudyCode_email(){
+            if ($("#veudyCode_email").val() == "") {
+                $("#veudyCode_emailmsg").html("<span style='color:red'>验证码不能为空</span>");
+                $("#veudyCode_emaildiv").attr("class", "form-group has-error");
+                $("#tijiao").attr("class", "btn btn-primary disabled");
+                return false;
+            } else {
+                $("#veudyCode_emailmsg").html(null);
+                $("#veudyCode_emaildiv").attr("class", "form-group has-success");
+                $("#tijiao").attr("class", "btn btn-primary");
+            }
+            return true;
+        }
+        $(document).ready(function () {
+            $("#username").blur(function () {
+                validateUsername();
             });
             $("#useremail").blur(function(){
-                if($("#useremail").val()==""){
-                    $("#emailmsg").html("<span style='color:red'>邮箱不能为空</span>");
-                    $("#uenail").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                }else{
-                    $("#emailmsg").html(null);
-                    $("#uenail").attr("class", "form-group has-success");
-                    $("#tijiao").attr("class", "btn btn-primary");
-                }
+                validateUserEmail();
             });
+            $("#password").blur(function () {
+              validatePassowrd();
+            });
+            $("#passwordagain").blur(function () {
+                validatePasswordAgain();
+            });
+            $("#veudyCode_email").blur(function(){
+                validateveudyCode_email()}
+            );
             $("#register").click(function () {
                 $("#myModa1").modal("show");
             });
             $("#tijiao").click(function () {
-                if ($("#username").val() == "") {
-                    $("#msg").html("<span style='color:red'>用户名不能为空</span>");
-                    $("#vilidatezhanghao").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                    return;
-                }
-                $.ajax({
-                    url: "/user/findByName.do",
-                    data: {
-                        username: $("#username").val()
-                    },
-                    error: function () {
-                        alert("error");
-                    },
-                    success: function (data) {
-                        if (data == "error") {
-                            $("#msg").html("<span style='color:red'>已存在</span>");
-                            $("#vilidatezhanghao").attr("class", "form-group has-error");
-                            $("#tijiao").attr("class", "btn btn-primary disabled");
-                        } else {
-                            $("#msg").html(null);
-                            $("#vilidatezhanghao").attr("class", "form-group has-success");
-                            $("#tijiao").attr("class", "btn btn-primary");
-                        }
-                    }
-                });
-                if ($("#passwordagain").val() == "") {
-                    $("#msg2").html("<span style='color:red'>重复密码不能为空</span>");
-                    $("#vilidatepwd1").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                    return;
-                } else {
-                    $("#tijiao").attr("class", "btn btn-primary");
-                }
-                if ($("#passwordagain").val() != $("#password").val()) {
-                    $("#msg1").html("<span style='color:red'>两次密码不一致</span>");
-                    $("#msg2").html("<span style='color:red'>两次密码不一致</span>");
-                    $("div[id*=vilidatepwd]").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                } else {
-                    $("#msg1").html(null);
-                    $("#msg2").html(null);
-                    $("div[id*=vilidatepwd]").attr("class", "form-group has-success");
-                    $("#tijiao").attr("class", "btn btn-primary");
-                }
-                if ($("#password").val() == "") {
-                    $("#msg1").html("<span style='color:red'>密码不能为空</span>");
-                    $("#vilidatepwd").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                } else {
-                    $("#tijiao").attr("class", "btn btn-primary");
-                }
-                if ($("#passwordagain").val() != $("#password").val()) {
-                    $("#msg1").html("<span style='color:red'>两次密码不一致</span>");
-                    $("#msg2").html("<span style='color:red'>两次密码不一致</span>");
-                    $("div[id*=vilidatepwd]").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
-                    return;
-                }
-                if($("#useremail").val()==""){
-                    $("#emailmsg").html("<span style='color:red'>邮箱不能为空</span>");
-                    $("#uenail").attr("class", "form-group has-error");
-                    $("#tijiao").attr("class", "btn btn-primary disabled");
+                var flag = true;
+                flag = validateUsername();
+                flag = validateUserEmail();
+                flag = validatePassowrd();
+                flag = validatePasswordAgain();
+                flag = validateveudyCode_email();
+                if(flag==true) {
+                    $("#registerfrom").submit();
                 }else{
-                    $("#tijiao").attr("class", "btn btn-primary");
+                    return false;
                 }
-                $("#registerfrom").submit();
             });
         });
     </script>
@@ -326,18 +335,20 @@
                             <div id="msg2"></div>
                         </div>
                     </div>
-                    <div class="form-group" id="uenail">
+                    <div class="form-group" id="validateUserEmail">
                         <label for="useremail" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-lg-4">
-                            <input type="email" name="u seremail" class="form-control"
+                            <input type="email" name="useremail" class="form-control"
                                    placeholder="输入邮箱" id="useremail"/>
                         </div>
+                        <div id="useremailmsg"></div>
                     </div>
-                    <div class="form-group" id="veudyCode">
+                    <div class="form-group" id="veudyCode_emaildiv">
                         <label for="username" class="col-sm-2 control-label">验证码</label>
                         <div class="col-lg-4">
                             <input type="password" name="veudyCode_email" class="form-control"
                                    placeholder="输入验证码" id="veudyCode_email"/>
+                            <div id="veudyCode_emailmsg"></div>
                             <span id="veudyCodeMsg">
                                 <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
                             </span>

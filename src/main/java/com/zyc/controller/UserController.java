@@ -35,7 +35,7 @@ public class UserController {
         }
 		User user = new User();
 		user.setUsername(request.getParameter("username"));
-		user.setUserpassword(EncodeMD5.encodeMD5(request.getParameter("password")));
+		user.setUserpassword(EncodeMD5.encodeMD5(request.getParameter("password"),user.getUsername()));
         user.setUsermail(request.getParameter("useremail"));
 		user.setUsertype(1);
         userService.insertuUser(user);

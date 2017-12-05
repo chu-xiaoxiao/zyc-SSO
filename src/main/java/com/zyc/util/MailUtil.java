@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -95,7 +96,8 @@ public class MailUtil {
                 stringBuffer.append((char)(97-36+temp));
             }
         }
-        this.sendMail("用户信息变更验证码","获取的验证码为"+stringBuffer.toString(),receiveMail);
+        this.sendMail("用户信息变更验证码","获取的验证码为"+stringBuffer.toString()+"" +
+                "<br>=============================<br>获取时间"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz").format(new Date()),receiveMail);
         return stringBuffer.toString();
     }
     /**
