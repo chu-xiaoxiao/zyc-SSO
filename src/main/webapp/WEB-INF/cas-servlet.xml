@@ -108,6 +108,7 @@
                 <prop key="/user/findByEmail">FindByNameController</prop>
                 <prop key="/user/getVerifyCodeFromMail.do">EmailVerifyCodeController</prop>
                 <prop key="/user/adduser.do">AddUserController</prop>
+                <prop key="/user/getVerifCodeByEmailForAddUser.do">EmailVerifyCodeController</prop>
                 <prop key="/user/modifyPassword">ModifyPassword</prop>
                 <prop key="/user/modifyPasswordAction">ModifyPasswordAction</prop>
             </util:properties>

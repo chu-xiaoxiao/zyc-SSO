@@ -180,7 +180,7 @@
                 validateUserEmail();
             });
             $("#password").blur(function () {
-              validatePassowrd();
+                validatePassowrd();
             });
             $("#passwordagain").blur(function () {
                 validatePasswordAgain();
@@ -224,11 +224,27 @@
                     $("#emailMsg").html("正在发送验证码...");
                 },
                 success: function (data) {
-                    $("#emailMsg").html("验证码发送成功...");
+                    $("#emailMsg").html(data);
                 },
                 error:function(){
                     $("#emailMsg").html("验证码发送失败...");
-                    $("#emailMsg").html('<a href="###" onclick="">重新发送验证码</a>');
+                    $("#getVerifForAddUserCodeHref").html('<a href="###" onclick="">重新发送验证码</a>');
+                }
+            });
+        }
+        function getVerifCodeByEmailForAddUser() {
+            $.ajax({
+                url: "/user/getVerifCodeByEmailForAddUser.do?useremail="+$("#useremail").val(),
+                type: "get",
+                beforeSend:function(){
+                    $("#emailMsg").html("正在发送验证码...");
+                },
+                success: function (data) {
+                    $("#emailMsg").html(data);
+                },
+                error:function(){
+                    $("#emailMsg").html("验证码发送失败...");
+                    $("#getVerifForAddUserCodeHref").html('<a href="###" onclick="">重新发送验证码</a>');
                 }
             });
         }
@@ -245,8 +261,8 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                        <form:form action="${contextPath}/login?service=${handle}" method="post"
-                                   class="form-horizontal" role="form" commandName="${commandName}">
+                    <form:form action="${contextPath}/login?service=${handle}" method="post"
+                               class="form-horizontal" role="form" commandName="${commandName}">
                         <div class="form-group">
                             <label for="firstname" class="col-sm-2 control-label">用户名</label>
                             <div class="col-lg-8">
@@ -350,7 +366,7 @@
                                    placeholder="输入验证码" id="veudyCode_email"/>
                             <div id="veudyCode_emailmsg"></div>
                             <span id="veudyCodeMsg">
-                                <a href="###" onclick="getVerifCodeByEmail()">获取验证码</a>
+                                <a href="###" onclick="getVerifCodeByEmailForAddUser()" id="getVerifForAddUserCodeHref">获取验证码</a>
                             </span>
                             <span id="emailMsg"></span>
                         </div>

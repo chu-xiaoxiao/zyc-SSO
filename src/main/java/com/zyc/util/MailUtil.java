@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -96,8 +95,23 @@ public class MailUtil {
                 stringBuffer.append((char)(97-36+temp));
             }
         }
-        this.sendMail("用户信息变更验证码","获取的验证码为"+stringBuffer.toString()+"" +
-                "<br>=============================<br>获取时间"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz").format(new Date()),receiveMail);
+        this.sendMail("用户信息变更验证码","获取的验证码为"+stringBuffer.toString(),receiveMail);
+        return stringBuffer.toString();
+    }
+    public String sendVerifyCode(Integer size, String receiveMail,String subject) throws UnsupportedEncodingException, MessagingException {
+        StringBuffer stringBuffer = new StringBuffer();
+        Random random = new Random(new Date().getTime());
+        for(int i=0;i<size;i++){
+            Integer temp = random.nextInt(62);
+            if(temp<10){
+                stringBuffer.append((char)(48+temp));
+            }else if(temp<36){
+                stringBuffer.append((char)(65-10+temp));
+            }else{
+                stringBuffer.append((char)(97-36+temp));
+            }
+        }
+        this.sendMail(subject,"获取的验证码为"+stringBuffer.toString(),receiveMail);
         return stringBuffer.toString();
     }
     /**

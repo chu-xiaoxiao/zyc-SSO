@@ -26,28 +26,58 @@ public class EmailVerifyCodeController extends AbstractController {
     UserService userService;
 
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        String url = request.getRequestURI();
+        if(url.contains("AddUser.do")){
+            this.getVerifyCodeAddNewUser(request,response);
+        }else{
+            this.getVerifyCOde(request,response);
+        }
+        return null;
+    }
+    private void getVerifyCOde(HttpServletRequest request, HttpServletResponse response) throws Exception {
         MailUtil mailUtil = new MailUtil(UserController.class.getClassLoader().getResource("mail.yml"));
         PrintWriter out = response.getWriter();
         String veudyCode = null;
         if(userService.findUserByEmail(request.getParameter("useremail")).size()==0){
-            out.print("验证码获取失败");
-            return null;
+            out.print("该邮箱暂未注册");
+            return;
         }
         try {
             veudyCode = mailUtil.sendVerifyCode(10, request.getParameter("useremail"));
+            out.print("验证码已发送至您的邮箱");
+            HttpSession session = request.getSession();
+            session.setAttribute("verifyCode",veudyCode);
         } catch (UnsupportedEncodingException e) {
             out.print("验证码获取失败");
             e.printStackTrace();
         } catch (MessagingException e) {
             out.print("验证码获取失败");
             e.printStackTrace();
+        }finally{
+            out.flush();
+            out.close();
         }
-        out.print("验证码已发送至您的邮箱");
-        HttpSession session = request.getSession();
-        session.setAttribute("verifyCode",veudyCode);
-        out.flush();
-        out.close();
-        return null;
+    }
+    private void getVerifyCodeAddNewUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        MailUtil mailUtil = new MailUtil(UserController.class.getClassLoader().getResource("mail.yml"));
+        PrintWriter out = response.getWriter();
+        String veudyCode = null;
+        try {
+            veudyCode = mailUtil.sendVerifyCode(10, request.getParameter("useremail"),"用户注册验证码");
+            out.print("验证码已发送至您的邮箱");
+            HttpSession session = request.getSession();
+            session.setAttribute("verifyCode",veudyCode);
+        } catch (UnsupportedEncodingException e) {
+            out.print("验证码获取失败");
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            out.print("验证码获取失败");
+            e.printStackTrace();
+        }finally {
+            if(out!=null)
+            out.flush();
+            out.close();
+        }
     }
 }

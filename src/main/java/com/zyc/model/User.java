@@ -223,5 +223,4 @@ public class User {
     public void setUsertype(Integer usertype) {
         this.usertype = usertype;
     }
-
 }

@@ -122,11 +122,7 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
-    <servlet-mapping>
-        <servlet-name>cas</servlet-name>
-        <url-pattern>/user/getVerifyCode.do</url-pattern>
-    </servlet-mapping>
+	
   <servlet-mapping>
     <servlet-name>cas</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -184,6 +180,11 @@
 
   <servlet-mapping>
     <servlet-name>cas</servlet-name>
+    <url-pattern>/user/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>cas</servlet-name>
     <url-pattern>/authorizationFailure.html</url-pattern>
   </servlet-mapping>
 
@@ -226,13 +227,6 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <!--??? start-->
-
-  <servlet-mapping>
-    <servlet-name>cas</servlet-name>
-    <url-pattern>/user/findByEmail</url-pattern>
-  </servlet-mapping>
-
-
   <servlet-mapping>
     <servlet-name>cas</servlet-name>
     <url-pattern>/user/findByName.do</url-pattern>
@@ -241,6 +235,10 @@
   <servlet-mapping>
     <servlet-name>cas</servlet-name>
     <url-pattern>/user/getVerifyCodeFromMail.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>cas</servlet-name>
+    <url-pattern>/user/getVerifCodeByEmailForAddUser.do</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
