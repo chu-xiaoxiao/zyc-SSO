@@ -240,6 +240,11 @@
     <servlet-name>cas</servlet-name>
     <url-pattern>/user/getVerifCodeByEmailForAddUser.do</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>cas</servlet-name>
+    <url-pattern>/user/getVerifyCode.do</url-pattern>
+  </servlet-mapping>
+
 
   <servlet-mapping>
     <servlet-name>cas</servlet-name>

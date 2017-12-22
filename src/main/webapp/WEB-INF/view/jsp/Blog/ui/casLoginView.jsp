@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="/css/jquery-confirm.css">
     <style>
         body {
-            background: url("bak.jpg") no-repeat;
+            background: url("/css/bak.jpg") no-repeat;
             background-size:cover;
         }
     </style>
